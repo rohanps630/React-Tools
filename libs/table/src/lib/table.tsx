@@ -1,8 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './table.css';
 import { Search, Sort } from './utils';
-import { SortConfig } from './@types';
+import { SelectionType, SortConfig } from './@types';
+import { SelectionCheckbox } from './components';
 
 interface TableColumn<T> {
   key: keyof T;
@@ -12,15 +14,18 @@ interface TableColumn<T> {
 interface TableComponentProps<T> {
   columns: TableColumn<T>[];
   initialData: T[];
+  selectionType?: SelectionType;
 }
 
 export const Table = <T extends object>({
   columns,
   initialData,
+  selectionType = 'none',
 }: TableComponentProps<T>) => {
   const [data, setData] = useState<T[]>(initialData);
   const [sortConfig, setSortConfig] = useState<SortConfig<T> | null>(null);
   const [searchText, setSearchText] = useState<string>('');
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   useEffect(() => {
     if (searchText) {
@@ -57,6 +62,38 @@ export const Table = <T extends object>({
     return null;
   };
 
+  const handleRowSelect = (index: number) => {
+    if (selectionType === 'none') {
+      return;
+    }
+
+    if (selectionType === 'single') {
+      setSelectedRows([index]);
+    } else if (selectionType === 'multi') {
+      const isSelected = selectedRows.includes(index);
+      if (isSelected) {
+        setSelectedRows(selectedRows.filter((rowIndex) => rowIndex !== index));
+      } else {
+        setSelectedRows([...selectedRows, index]);
+      }
+    }
+  };
+
+  const isRowSelected = (index: number) => {
+    return selectedRows.includes(index);
+  };
+
+  const getSelectionCheckbox = (index: number) => {
+    return (
+      <SelectionCheckbox
+        index={index}
+        isSelected={isRowSelected(index)}
+        selectionType={selectionType}
+        handleRowSelect={handleRowSelect}
+      />
+    );
+  };
+
   return (
     <>
       <input
@@ -68,7 +105,8 @@ export const Table = <T extends object>({
       />
       <table className="table">
         <thead>
-          <tr>
+          <tr className={'header-container'}>
+            {selectionType !== 'none' && <th></th>}
             {columns.map((column) => (
               <th
                 key={column.key as string}
@@ -82,6 +120,9 @@ export const Table = <T extends object>({
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
+              {selectionType !== 'none' && (
+                <td>{getSelectionCheckbox(index)}</td>
+              )}
               {columns.map((column) => (
                 <td key={column.key as string}>
                   {item[column.key] as React.ReactNode}

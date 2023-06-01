@@ -6,7 +6,11 @@ import { ColumnsData, DummyData } from './DummyData';
 export function App() {
   return (
     <div>
-      <Table columns={ColumnsData} initialData={DummyData} />
+      <Table
+        columns={ColumnsData}
+        initialData={DummyData}
+        selectionType={'multi'}
+      />
     </div>
   );
 }

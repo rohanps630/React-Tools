@@ -1,6 +1,6 @@
 export interface SortConfig<T> {
   key: keyof T;
-  direction: "asc" | "desc";
+  direction: 'asc' | 'desc';
 }
 
 export interface TableColumn<T> {
@@ -12,3 +12,5 @@ export interface TableComponentProps<T> {
   columns: TableColumn<T>[];
   initialData: T[];
 }
+
+export type SelectionType = 'single' | 'multi' | 'none';
