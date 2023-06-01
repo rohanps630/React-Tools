@@ -1,12 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
+import { Table } from '@react-tools/table';
+// import styles from './app.module.css';
 
-import NxWelcome from './nx-welcome';
+import { ColumnsData, DummyData } from './DummyData';
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="sample-app" />
+      <Table columns={ColumnsData} initialData={DummyData} />
     </div>
   );
 }
