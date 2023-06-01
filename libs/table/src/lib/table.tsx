@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Search, Sort } from './utils';
 import { SortConfig } from './@types';
 
@@ -48,6 +50,13 @@ export const Table = <T extends object>({
     setSearchText(event.target.value);
   };
 
+  const getSortIndicator = (columnName: keyof T) => {
+    if (sortConfig && sortConfig.key === columnName) {
+      return sortConfig.direction === 'asc' ? '↑' : '↓';
+    }
+    return null;
+  };
+
   return (
     <>
       <input
@@ -65,7 +74,7 @@ export const Table = <T extends object>({
                 key={column.key as string}
                 onClick={() => handleSort(column.key)}
               >
-                {column.label}
+                {column.label} {getSortIndicator(column.key)}
               </th>
             ))}
           </tr>

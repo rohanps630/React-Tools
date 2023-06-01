@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import Table from './table';
+import { Table } from './table';
 
 describe('Table', () => {
   it('should render successfully', () => {
